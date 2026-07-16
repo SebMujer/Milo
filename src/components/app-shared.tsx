@@ -1,5 +1,15 @@
 import type { ReactNode } from "react";
-import { LayoutGridIcon, ListChecksIcon, BarChart3Icon, MessageSquareTextIcon, UsersIcon, PlugIcon, SettingsIcon, HelpCircleIcon, ActivityIcon } from "lucide-react";
+import {
+	LayoutGridIcon,
+	CalendarDaysIcon,
+	ClipboardListIcon,
+	GraduationCapIcon,
+	NotebookPenIcon,
+	BookOpenIcon,
+	SettingsIcon,
+	HelpCircleIcon,
+	BellIcon,
+} from "lucide-react";
 
 export type SidebarNavItem = {
 	title: string;
@@ -19,85 +29,46 @@ export const navGroups: SidebarNavGroup[] = [
 		items: [
 			{
 				title: "Overview",
-				path: "#/overview",
-				icon: (
-					<LayoutGridIcon
-					/>
-				),
+				path: "/dashboard",
+				icon: <LayoutGridIcon />,
 				isActive: true,
 			},
 		],
 	},
 	{
-		label: "Today",
+		label: "Schoolwork",
 		items: [
 			{
-				title: "Queue",
-				path: "#/queue",
-				icon: (
-					<ListChecksIcon
-					/>
-				),
+				title: "Calendar",
+				path: "/dashboard/calendar",
+				icon: <CalendarDaysIcon />,
 			},
 			{
-				title: "Team insights",
-				path: "#/team-insights",
-				icon: (
-					<BarChart3Icon
-					/>
-				),
+				title: "Tasks",
+				path: "/dashboard/tasks",
+				icon: <ClipboardListIcon />,
 			},
-		],
-	},
-	{
-		label: "Inbox",
-		items: [
 			{
-				title: "Conversations",
-				icon: (
-					<MessageSquareTextIcon
-					/>
-				),
+				title: "Canvas",
+				icon: <GraduationCapIcon />,
 				subItems: [
-					{ title: "Unassigned", path: "#/inbox/unassigned" },
-					{ title: "Assigned to me", path: "#/inbox/assigned" },
-					{ title: "Recently closed", path: "#/inbox/closed" },
+					{ title: "Assignments", path: "/dashboard/canvas/assignments" },
+					{ title: "Grades", path: "/dashboard/canvas/grades" },
+					{ title: "Announcements", path: "/dashboard/canvas/announcements" },
 				],
 			},
 			{
-				title: "Customers",
-				path: "#/customers",
-				icon: (
-					<UsersIcon
-					/>
-				),
-			},
-			{
-				title: "Channels",
-				path: "#/channels",
-				icon: (
-					<PlugIcon
-					/>
-				),
-			},
-		],
-	},
-	{
-		label: "Organization",
-		items: [
-			{
-				title: "Workspace",
-				icon: (
-					<SettingsIcon
-					/>
-				),
+				title: "Notes",
+				icon: <NotebookPenIcon />,
 				subItems: [
-					{ title: "Branding", path: "#/workspace/branding" },
-					{ title: "Team & roles", path: "#/workspace/team" },
-					{ title: "API keys", path: "#/workspace/api-keys" },
-					{ title: "Webhooks", path: "#/workspace/webhooks" },
-					{ title: "Billing", path: "#/workspace/billing" },
+					{ title: "Active notes", path: "/dashboard/notes/active" },
+					{ title: "Archive", path: "/dashboard/notes/archive" },
 				],
+			},
+			{
+				title: "Courses",
+				path: "/dashboard/courses",
+				icon: <BookOpenIcon />,
 			},
 		],
 	},
@@ -105,20 +76,19 @@ export const navGroups: SidebarNavGroup[] = [
 
 export const footerNavLinks: SidebarNavItem[] = [
 	{
-		title: "Help Center",
-		path: "#/help",
-		icon: (
-			<HelpCircleIcon
-			/>
-		),
+		title: "Notifications",
+		path: "/dashboard/notifications",
+		icon: <BellIcon />,
 	},
 	{
-		title: "System status",
-		path: "#/status",
-		icon: (
-			<ActivityIcon
-			/>
-		),
+		title: "Settings",
+		path: "/dashboard/settings",
+		icon: <SettingsIcon />,
+	},
+	{
+		title: "Help",
+		path: "/dashboard/help",
+		icon: <HelpCircleIcon />,
 	},
 ];
 

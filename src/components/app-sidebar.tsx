@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
 	Sidebar,
@@ -18,28 +19,29 @@ export function AppSidebar() {
 	return (
 		<Sidebar collapsible="icon" variant="inset">
 			<SidebarHeader className="h-14 justify-center">
-					<SidebarMenuButton render={<a href="/" />}><img src="/milk-svgrepo-com.png" alt="Milo" className="size-5" /><span className="font-medium">Milo</span></SidebarMenuButton>
+				<SidebarMenuButton render={<NavLink to="/dashboard" />}>
+					<img src="/milk-svgrepo-com.png" alt="Milo" className="size-5" />
+					<span className="font-medium">Milo</span>
+				</SidebarMenuButton>
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>
 					<SidebarMenuItem className="flex items-center gap-2">
 						<SidebarMenuButton
 							className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
-							tooltip="Quick Create"
+							tooltip="Quick Add"
 						>
-							<PlusIcon
-							/>
-							<span>New Conversation</span>
+							<PlusIcon />
+							<span>New Task</span>
 						</SidebarMenuButton>
 						<Button
-							aria-label="Search conversations"
+							aria-label="Search"
 							className="size-8 group-data-[collapsible=icon]:opacity-0"
 							size="icon"
 							variant="outline"
 						>
-							<SearchIcon
-							/>
-							<span className="sr-only">Search conversations</span>
+							<SearchIcon />
+							<span className="sr-only">Search</span>
 						</Button>
 					</SidebarMenuItem>
 				</SidebarGroup>
@@ -52,7 +54,17 @@ export function AppSidebar() {
 				<SidebarMenu className="mt-2">
 					{footerNavLinks.map((item) => (
 						<SidebarMenuItem key={item.title}>
-							<SidebarMenuButton className="text-muted-foreground" isActive={item.isActive} size="sm" render={<a href={item.path} />}>{item.icon}<span>{item.title}</span></SidebarMenuButton>
+							<SidebarMenuButton
+								className="text-muted-foreground"
+								isActive={item.isActive}
+								size="sm"
+								render={
+									item.path ? <NavLink to={item.path} end /> : undefined
+								}
+							>
+								{item.icon}
+								<span>{item.title}</span>
+							</SidebarMenuButton>
 						</SidebarMenuItem>
 					))}
 				</SidebarMenu>

@@ -1,21 +1,51 @@
 import { Routes, Route } from "react-router-dom";
+import { add } from "date-fns";
 import { AuthPage } from "@/components/auth-page";
 import { AppShell } from "@/components/app-shell";
-import { DashboardSkeleton } from "@/components/dashboard-skeleton";
+import { Dashboard } from "@/components/dashboard";
+import { FullScreenCalendar } from "@/components/FullScreenCalendar";
 import { PrivacyPolicy } from "@/components/PrivacyPolicy";
+import type { CalendarData } from "@/components/FullScreenCalendar";
+
+/**
+ * Dummy calendar event data to demonstrate the calendar component.
+ * Anchored relative to today so it's always visible on load.
+ */
+function buildCalendarData(): CalendarData[] {
+	const today = new Date();
+	const mk = (offsetDays: number, name: string, time: string): CalendarData => ({
+		day: add(today, { days: offsetDays }),
+		events: [
+			{
+				id: Date.now() + offsetDays,
+				name,
+				time,
+				datetime: add(today, { days: offsetDays }).toISOString(),
+			},
+		],
+	});
+
+	return [
+		mk(1, "Biology Exam", "9:00 AM"),
+		mk(1, "Project Milestone", "11:59 PM"),
+		mk(3, "CS 161 Lecture", "11:00 AM"),
+		mk(5, "Essay Draft Due", "11:59 PM"),
+		mk(7, "MTH 251 Quiz", "3:30 PM"),
+		mk(10, "Group Study", "4:00 PM"),
+	];
+}
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<AuthPage />} />
-      <Route
-        path="/dashboard"
-        element={
-          <AppShell>
-            <DashboardSkeleton />
-          </AppShell>
-        }
-      />
+      <Route path="/dashboard" element={<AppShell />}>
+        <Route index element={<Dashboard />} />
+        <Route
+          path="calendar"
+          element={<FullScreenCalendar data={buildCalendarData()} />}
+        />
+      </Route>
       <Route path="/privacy" element={<PrivacyPolicy />} />
     </Routes>
   );
