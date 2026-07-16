@@ -1,11 +1,11 @@
-import { GithubIcon } from "@/components/github-icon";
+import { useNavigate } from "react-router-dom";
 import { GoogleIcon } from "@/components/google-icon";
-import { Logo } from "@/components/logo";
 import { Particles } from "@/components/ui/particles";
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
 
 export function AuthPage() {
+	const navigate = useNavigate();
+
 	return (
 		<div className="relative w-full md:h-screen md:overflow-hidden">
 			<Particles
@@ -15,41 +15,42 @@ export function AuthPage() {
 				quantity={120}
 			/>
 			<div className="relative mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-8">
-				<Button className="absolute top-4 left-4" variant="ghost" render={<a href="#" />} nativeButton={false}><ChevronLeftIcon data-icon="inline-start" />Home
-                					</Button>
-
 				<div className="mx-auto space-y-4 sm:w-sm">
-					<Logo className="h-5" />
+					<img
+						src="/milk-svgrepo-com.png"
+						alt="Milo"
+						className="h-10"
+					/>
 					<div className="flex flex-col space-y-1">
 						<h1 className="font-bold text-2xl tracking-wide">
 							Sign In or Join Now!
 						</h1>
 						<p className="text-base text-muted-foreground">
-							login or create your efferd account.
+							login or create your Milo account.
 						</p>
 					</div>
 					<div className="space-y-2">
-						<Button className="w-full" type="button">
+						<Button
+							className="w-full"
+							type="button"
+							onClick={() => navigate("/dashboard")}
+						>
 							<GoogleIcon data-icon="inline-start" />
 							Continue with Google
-						</Button>
-						<Button className="w-full" type="button">
-							<GithubIcon data-icon="inline-start" />
-							Continue with GitHub
 						</Button>
 					</div>
 					<p className="mt-8 text-muted-foreground text-sm">
 						By clicking continue, you agree to our{" "}
 						<a
 							className="underline underline-offset-4 hover:text-primary"
-							href="#"
+							href="/privacy"
 						>
 							Terms of Service
 						</a>{" "}
 						and{" "}
 						<a
 							className="underline underline-offset-4 hover:text-primary"
-							href="#"
+							href="/privacy"
 						>
 							Privacy Policy
 						</a>
