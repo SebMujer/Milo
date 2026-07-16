@@ -7,6 +7,7 @@ import {
 	NotebookPenIcon,
 	BookOpenIcon,
 	SettingsIcon,
+	PenLineIcon,
 } from "lucide-react";
 
 export type SidebarNavItem = {
@@ -67,6 +68,11 @@ export const navGroups: SidebarNavGroup[] = [
 				title: "Courses",
 				path: "/dashboard/courses",
 				icon: <BookOpenIcon />,
+			},
+			{
+				title: "Whiteboard",
+				path: "/dashboard/whiteboard",
+				icon: <PenLineIcon />,
 			},
 		],
 	},
