@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/sidebar";
 import { NavGroup } from "@/components/nav-group";
 import { footerNavLinks, navGroups } from "@/components/app-shared";
-import { LatestChange } from "@/components/latest-change";
 import { PlusIcon, SearchIcon } from "lucide-react";
 
 export function AppSidebar() {
@@ -50,8 +49,7 @@ export function AppSidebar() {
 				))}
 			</SidebarContent>
 			<SidebarFooter>
-				<LatestChange />
-				<SidebarMenu className="mt-2">
+				<SidebarMenu>
 					{footerNavLinks.map((item) => (
 						<SidebarMenuItem key={item.title}>
 							<SidebarMenuButton

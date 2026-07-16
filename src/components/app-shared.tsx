@@ -7,8 +7,6 @@ import {
 	NotebookPenIcon,
 	BookOpenIcon,
 	SettingsIcon,
-	HelpCircleIcon,
-	BellIcon,
 } from "lucide-react";
 
 export type SidebarNavItem = {
@@ -76,19 +74,9 @@ export const navGroups: SidebarNavGroup[] = [
 
 export const footerNavLinks: SidebarNavItem[] = [
 	{
-		title: "Notifications",
-		path: "/dashboard/notifications",
-		icon: <BellIcon />,
-	},
-	{
 		title: "Settings",
 		path: "/dashboard/settings",
 		icon: <SettingsIcon />,
-	},
-	{
-		title: "Help",
-		path: "/dashboard/help",
-		icon: <HelpCircleIcon />,
 	},
 ];
 

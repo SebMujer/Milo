@@ -128,3 +128,38 @@
     @apply font-sans;
     }
 }
+
+/* ── Custom scrollbar ── */
+:root {
+  --scrollbar-width: 6px;
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: oklch(0.45 0 0 / 50%);
+  --scrollbar-thumb-hover: oklch(0.55 0 0 / 70%);
+}
+
+.dark {
+  --scrollbar-thumb: oklch(0.4 0 0 / 60%);
+  --scrollbar-thumb-hover: oklch(0.55 0 0 / 80%);
+}
+
+/* Chromium / Edge / Safari */
+.scrollbar-thin::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Firefox */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
