@@ -3,7 +3,8 @@ import {
 	LayoutGridIcon,
 	CalendarDaysIcon,
 	ClipboardListIcon,
-	GraduationCapIcon,
+	MailIcon,
+	MessagesSquareIcon,
 	NotebookPenIcon,
 	BookOpenIcon,
 	SettingsIcon,
@@ -48,13 +49,14 @@ export const navGroups: SidebarNavGroup[] = [
 				icon: <ClipboardListIcon />,
 			},
 			{
-				title: "Canvas",
-				icon: <GraduationCapIcon />,
-				subItems: [
-					{ title: "Assignments", path: "/dashboard/canvas/assignments" },
-					{ title: "Grades", path: "/dashboard/canvas/grades" },
-					{ title: "Announcements", path: "/dashboard/canvas/announcements" },
-				],
+				title: "Email",
+				path: "/dashboard/email",
+				icon: <MailIcon />,
+			},
+			{
+				title: "Threads",
+				path: "/dashboard/threads",
+				icon: <MessagesSquareIcon />,
 			},
 			{
 				title: "Notes",

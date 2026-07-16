@@ -13,12 +13,11 @@ import {
 	SunIcon,
 	MoonIcon,
 	MonitorIcon,
-	KeyIcon,
+	MailIcon,
 	DownloadIcon,
 	Trash2Icon,
 	CheckIcon,
-	EyeIcon,
-	EyeOffIcon,
+	RefreshCwIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -28,12 +27,10 @@ import { cn } from "@/lib/utils";
 
 type Theme = "dark" | "light" | "system";
 
-/** Read the persisted theme or fall back to "system". */
 function getStoredTheme(): Theme {
 	return (localStorage.getItem("milo_theme") as Theme) ?? "system";
 }
 
-/** Apply the resolved theme class to <html> and persist the preference. */
 function applyTheme(theme: Theme) {
 	const resolved =
 		theme === "system"
@@ -41,7 +38,6 @@ function applyTheme(theme: Theme) {
 				? "dark"
 				: "light"
 			: theme;
-
 	document.documentElement.classList.toggle("dark", resolved === "dark");
 	localStorage.setItem("milo_theme", theme);
 }
@@ -50,7 +46,6 @@ function applyTheme(theme: Theme) {
 /*  Export helpers                                                             */
 /* -------------------------------------------------------------------------- */
 
-/** Serialise all localStorage keys into a JSON file and trigger download. */
 function exportData() {
 	const snapshot: Record<string, string> = {};
 	for (let i = 0; i < localStorage.length; i++) {
@@ -69,7 +64,7 @@ function exportData() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Sub-components                                                             */
+/*  Section wrapper                                                            */
 /* -------------------------------------------------------------------------- */
 
 interface SectionProps {
@@ -98,19 +93,21 @@ function Section({ icon: Icon, title, description, children }: SectionProps) {
 /*  Theme toggle — 3-way segmented control                                    */
 /* -------------------------------------------------------------------------- */
 
-const THEME_OPTIONS: { value: Theme; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
+const THEME_OPTIONS: {
+	value: Theme;
+	label: string;
+	Icon: React.ComponentType<{ className?: string }>;
+}[] = [
 	{ value: "light", label: "Light", Icon: SunIcon },
-	{ value: "dark",  label: "Dark",  Icon: MoonIcon },
+	{ value: "dark", label: "Dark", Icon: MoonIcon },
 	{ value: "system", label: "System", Icon: MonitorIcon },
 ];
 
 function ThemeToggle() {
 	const [theme, setTheme] = useState<Theme>(getStoredTheme);
 
-	// Re-apply whenever the OS preference changes while "system" is active.
 	useEffect(() => {
 		applyTheme(theme);
-
 		if (theme !== "system") return;
 		const mql = window.matchMedia("(prefers-color-scheme: dark)");
 		const handler = () => applyTheme("system");
@@ -154,54 +151,77 @@ function ThemeToggle() {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Canvas API Key                                                             */
+/*  Email Sync Settings                                                        */
 /* -------------------------------------------------------------------------- */
 
-function CanvasApiSection() {
-	const [apiKey, setApiKey] = useState(
-		() => localStorage.getItem("canvas_api_key") ?? ""
+const SYNC_OPTIONS = ["Every 5 minutes", "Every 15 minutes", "Every 30 minutes", "Hourly", "Manual only"];
+
+function EmailSyncSection() {
+	const [email, setEmail] = useState(
+		() => localStorage.getItem("milo_email_address") ?? ""
 	);
-	const [showKey, setShowKey] = useState(false);
+	const [syncFreq, setSyncFreq] = useState(
+		() => localStorage.getItem("milo_sync_frequency") ?? "Every 15 minutes"
+	);
 	const [status, setStatus] = useState<"idle" | "saved">("idle");
 
 	function save() {
-		localStorage.setItem("canvas_api_key", apiKey);
+		localStorage.setItem("milo_email_address", email);
+		localStorage.setItem("milo_sync_frequency", syncFreq);
 		setStatus("saved");
 		setTimeout(() => setStatus("idle"), 2000);
 	}
 
 	return (
-		<div className="space-y-3">
-			<div className="relative">
+		<div className="space-y-4">
+			{/* Primary email */}
+			<div className="space-y-1.5">
+				<label className="text-sm font-medium" htmlFor="email-address">
+					Primary Email Address
+				</label>
 				<Input
-					type={showKey ? "text" : "password"}
-					placeholder="Enter your Canvas API key…"
-					value={apiKey}
-					onChange={(e) => setApiKey(e.target.value)}
-					className="pr-10 font-mono text-sm"
-					autoComplete="off"
-					spellCheck={false}
+					id="email-address"
+					type="email"
+					placeholder="you@university.edu"
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+					autoComplete="email"
+					className="max-w-sm"
 				/>
-				<button
-					type="button"
-					onClick={() => setShowKey((v) => !v)}
-					aria-label={showKey ? "Hide API key" : "Show API key"}
-					className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-				>
-					{showKey ? (
-						<EyeOffIcon className="size-4" />
-					) : (
-						<EyeIcon className="size-4" />
-					)}
-				</button>
+				<p className="text-xs text-muted-foreground">
+					Milo will display email synced from this address in the Inbox and Threads views.
+				</p>
 			</div>
-			<p className="text-xs text-muted-foreground">
-				Generate a key in Canvas → Account → Settings → Approved Integrations.
-			</p>
+
+			{/* Sync frequency */}
+			<div className="space-y-1.5">
+				<label className="text-sm font-medium" htmlFor="sync-freq">
+					Sync Frequency
+				</label>
+				<div className="flex flex-wrap gap-2" role="group" aria-label="Sync frequency">
+					{SYNC_OPTIONS.map((opt) => (
+						<button
+							key={opt}
+							type="button"
+							onClick={() => setSyncFreq(opt)}
+							className={cn(
+								"inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+								syncFreq === opt
+									? "border-primary bg-primary/10 text-primary font-medium"
+									: "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+							)}
+						>
+							<RefreshCwIcon className="size-3" />
+							{opt}
+						</button>
+					))}
+				</div>
+			</div>
+
 			<Button
 				onClick={save}
 				size="sm"
-				disabled={!apiKey || status === "saved"}
+				disabled={status === "saved"}
 				className="gap-1.5"
 			>
 				{status === "saved" ? (
@@ -210,7 +230,7 @@ function CanvasApiSection() {
 						Saved
 					</>
 				) : (
-					"Save API Key"
+					"Save Email Settings"
 				)}
 			</Button>
 		</div>
@@ -231,7 +251,7 @@ function DataSection() {
 	function handleReset() {
 		if (
 			!window.confirm(
-				"This will delete all locally stored Milo data including your Canvas API key. Continue?"
+				"This will delete all locally stored Milo data including email settings and preferences. Continue?"
 			)
 		) {
 			return;
@@ -243,19 +263,13 @@ function DataSection() {
 
 	return (
 		<div className="space-y-4">
-			{/* Export */}
 			<div className="flex flex-col gap-1.5">
 				<p className="text-sm font-medium">Export Data</p>
 				<p className="text-xs text-muted-foreground">
-					Download a JSON snapshot of all locally stored Milo data.
+					Download a JSON snapshot of all locally stored Milo preferences.
 				</p>
 				<div className="mt-1">
-					<Button
-						onClick={handleExport}
-						variant="outline"
-						size="sm"
-						className="gap-1.5"
-					>
+					<Button onClick={handleExport} variant="outline" size="sm" className="gap-1.5">
 						<DownloadIcon className="size-3.5" />
 						Export Data
 					</Button>
@@ -264,20 +278,14 @@ function DataSection() {
 
 			<Separator />
 
-			{/* Reset */}
 			<div className="flex flex-col gap-1.5">
 				<p className="text-sm font-medium">Reset All Data</p>
 				<p className="text-xs text-muted-foreground">
-					Permanently removes all cached assignments, notes, and settings from
-					this device. This cannot be undone.
+					Permanently removes all cached emails, notes, and settings from this
+					device. This cannot be undone.
 				</p>
 				<div className="mt-1">
-					<Button
-						onClick={handleReset}
-						variant="destructive"
-						size="sm"
-						className="gap-1.5"
-					>
+					<Button onClick={handleReset} variant="destructive" size="sm" className="gap-1.5">
 						<Trash2Icon className="size-3.5" />
 						{resetStatus === "done" ? "Data Cleared" : "Reset All Data"}
 					</Button>
@@ -294,7 +302,6 @@ function DataSection() {
 export function Settings() {
 	return (
 		<div className="mx-auto w-full max-w-2xl space-y-6">
-			{/* Page heading */}
 			<div>
 				<h1 className="text-xl font-semibold">Settings</h1>
 				<p className="text-sm text-muted-foreground">
@@ -302,16 +309,14 @@ export function Settings() {
 				</p>
 			</div>
 
-			{/* Canvas Integration */}
 			<Section
-				icon={KeyIcon}
-				title="Canvas Integration"
-				description="Connect your Canvas LMS account to sync assignments and deadlines."
+				icon={MailIcon}
+				title="Email Sync Settings"
+				description="Configure which email account Milo syncs from and how often to check for new messages."
 			>
-				<CanvasApiSection />
+				<EmailSyncSection />
 			</Section>
 
-			{/* Appearance */}
 			<Section
 				icon={SunIcon}
 				title="Appearance"
@@ -320,7 +325,6 @@ export function Settings() {
 				<ThemeToggle />
 			</Section>
 
-			{/* Backup & Reset */}
 			<Section
 				icon={DownloadIcon}
 				title="Backup & Data"

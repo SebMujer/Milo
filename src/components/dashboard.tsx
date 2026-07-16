@@ -7,13 +7,13 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-	BookOpenIcon,
+	MailIcon,
 	CalendarClockIcon,
 	CheckCircle2Icon,
 	CircleIcon,
 	ClipboardListIcon,
 	FileTextIcon,
-	GraduationCapIcon,
+	InboxIcon,
 	NotebookPenIcon,
 	SparklesIcon,
 } from "lucide-react";
@@ -31,12 +31,11 @@ interface Deadline {
 	priority: Priority;
 }
 
-interface CanvasAssignment {
-	course: string;
-	title: string;
+interface EmailMessage {
+	from: string;
+	subject: string;
 	due: string;
-	points: string;
-	status: "submitted" | "todo" | "missing";
+	status: "unread" | "read" | "replied";
 }
 
 interface Note {
@@ -83,34 +82,30 @@ const deadlines: Deadline[] = [
 	},
 ];
 
-const canvasAssignments: CanvasAssignment[] = [
+const emails: EmailMessage[] = [
 	{
-		course: "CS 161",
-		title: "Reading: Binary Trees",
-		due: "Today, 11:59 PM",
-		points: "10 pts",
-		status: "todo",
+		from: "Prof. Martinez",
+		subject: "BIO 201 — Lab Report Graded",
+		due: "Today, 9:14 AM",
+		status: "unread",
 	},
 	{
-		course: "BIO 201",
-		title: "Discussion Post 5",
-		due: "Today, 11:59 PM",
-		points: "5 pts",
-		status: "todo",
-	},
-	{
-		course: "ENG 102",
-		title: "Peer Review Submission",
+		from: "CS 161 TA",
+		subject: "Office Hours Update",
 		due: "Yesterday",
-		points: "20 pts",
-		status: "submitted",
+		status: "read",
 	},
 	{
-		course: "MTH 251",
-		title: "Problem Set 6",
-		due: "3 days ago",
-		points: "30 pts",
-		status: "missing",
+		from: "Registrar's Office",
+		subject: "Fall 2025 Registration Opens",
+		due: "Mon",
+		status: "read",
+	},
+	{
+		from: "Study Group — ENG 102",
+		subject: "Re: Peer Review Draft",
+		due: "Mon",
+		status: "replied",
 	},
 ];
 
@@ -152,16 +147,16 @@ const priorityStyles: Record<Priority, string> = {
 	low: "text-muted-foreground",
 };
 
-const statusStyles: Record<CanvasAssignment["status"], string> = {
-	submitted: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
-	todo: "bg-primary/15 text-primary",
-	missing: "bg-destructive/15 text-destructive",
+const statusStyles: Record<EmailMessage["status"], string> = {
+	unread: "bg-primary/15 text-primary",
+	read: "bg-muted text-muted-foreground",
+	replied: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400",
 };
 
-const statusLabel: Record<CanvasAssignment["status"], string> = {
-	submitted: "Submitted",
-	todo: "To do",
-	missing: "Missing",
+const statusLabel: Record<EmailMessage["status"], string> = {
+	unread: "Unread",
+	read: "Read",
+	replied: "Replied",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -218,9 +213,9 @@ function StudentStats() {
 			hint: "next in 2 days",
 		},
 		{
-			label: "Canvas syncs (7d)",
-			value: "23",
-			icon: GraduationCapIcon,
+			label: "Unread emails",
+			value: "6",
+			icon: InboxIcon,
 			hint: "last sync 1h ago",
 		},
 		{
@@ -313,29 +308,27 @@ export function Dashboard() {
 						</CardContent>
 					</Card>
 
-					{/* Canvas Assignments */}
+					{/* Recent Emails */}
 					<Card className="shadow-none dark:ring-0">
 						<CardHeader>
 							<SectionHeader
-								icon={GraduationCapIcon}
-								title="Canvas Assignments"
+								icon={MailIcon}
+								title="Recent Emails"
 								count="4"
-								action="Open Canvas"
+								action="Open Inbox"
 							/>
 						</CardHeader>
 						<CardContent className="divide-y">
-							{canvasAssignments.map((a) => (
+							{emails.map((a) => (
 								<div
-									key={`${a.course}-${a.title}`}
+									key={`${a.from}-${a.subject}`}
 									className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
 								>
 									<div className="flex min-w-0 items-center gap-3">
-										<BookOpenIcon className="size-4 shrink-0 text-muted-foreground" />
+										<MailIcon className="size-4 shrink-0 text-muted-foreground" />
 										<div className="min-w-0">
-											<p className="truncate font-medium">{a.title}</p>
-											<p className="text-xs text-muted-foreground">
-												{a.course} · {a.points}
-											</p>
+											<p className="truncate font-medium">{a.subject}</p>
+											<p className="text-xs text-muted-foreground">{a.from}</p>
 										</div>
 									</div>
 									<div className="flex shrink-0 items-center gap-3">
