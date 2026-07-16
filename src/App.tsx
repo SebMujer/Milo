@@ -5,7 +5,7 @@ import { AppShell } from "@/components/app-shell";
 import { Dashboard } from "@/components/dashboard";
 import { FullScreenCalendar } from "@/components/FullScreenCalendar";
 import { PrivacyPolicy } from "@/components/PrivacyPolicy";
-import { SettingsPage } from "@/components/SettingsPage";
+import { Settings } from "@/pages/Settings";
 import { Whiteboard } from "@/pages/Whiteboard";
 import type { CalendarData } from "@/components/FullScreenCalendar";
 
@@ -47,7 +47,7 @@ function App() {
           path="calendar"
           element={<FullScreenCalendar data={buildCalendarData()} />}
         />
-        <Route path="settings" element={<SettingsPage />} />
+        <Route path="settings" element={<Settings />} />
         <Route path="whiteboard" element={<Whiteboard />} />
       </Route>
       <Route path="/privacy" element={<PrivacyPolicy />} />
