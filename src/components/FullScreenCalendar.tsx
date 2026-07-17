@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import {
   add,
   eachDayOfInterval,
@@ -60,6 +61,7 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
   const [currentMonth, setCurrentMonth] = React.useState(
     format(today, "MMM-yyyy"),
   )
+  const [direction, setDirection] = React.useState<1 | -1>(1)
   const firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date())
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -69,17 +71,21 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
   })
 
   function previousMonth() {
+    setDirection(-1)
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 })
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"))
   }
 
   function nextMonth() {
+    setDirection(1)
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 })
     setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"))
   }
 
   function goToToday() {
-    setCurrentMonth(format(today, "MMM-yyyy"))
+    const todayMonth = format(today, "MMM-yyyy")
+    setDirection(currentMonth < todayMonth ? 1 : -1)
+    setCurrentMonth(todayMonth)
   }
 
   return (
@@ -157,7 +163,7 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
       </div>
 
       {/* Calendar Grid */}
-      <div className="lg:flex lg:flex-auto lg:flex-col">
+      <div className="lg:flex lg:flex-auto lg:flex-col overflow-hidden">
         {/* Week Days Header */}
         <div className="grid grid-cols-7 border text-center text-xs font-semibold leading-6 lg:flex-none">
           <div className="border-r py-2.5">Sun</div>
@@ -169,8 +175,17 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
           <div className="py-2.5">Sat</div>
         </div>
 
-        {/* Calendar Days */}
-        <div className="flex text-xs leading-6 lg:flex-auto">
+        {/* Calendar Days — animated slide on month change */}
+        <AnimatePresence mode="wait" initial={false} custom={direction}>
+          <motion.div
+            key={currentMonth}
+            custom={direction}
+            initial={{ x: direction * 40, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: direction * -40, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            className="flex text-xs leading-6 lg:flex-auto"
+          >
           <div className="hidden w-full border-x lg:grid lg:grid-cols-7 lg:grid-rows-5">
             {days.map((day, dayIdx) =>
               !isDesktop ? (
@@ -359,7 +374,8 @@ export function FullScreenCalendar({ data }: FullScreenCalendarProps) {
               </button>
             ))}
           </div>
-        </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   )

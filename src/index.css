@@ -163,3 +163,39 @@
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
+
+/* ── Accordion height animations (Radix) ── */
+@keyframes accordion-down {
+  from { height: 0; opacity: 0; }
+  to   { height: var(--radix-accordion-content-height); opacity: 1; }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); opacity: 1; }
+  to   { height: 0; opacity: 0; }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── ReactFlow dark-theme overrides ── */
+.react-flow__attribution {
+  display: none !important;
+}
+.react-flow__handle {
+  background: var(--border) !important;
+  border-color: var(--border) !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+.react-flow__edge-path {
+  stroke: oklch(0.5 0 0 / 60%) !important;
+}
+.react-flow__controls button {
+  color: var(--foreground) !important;
+}
