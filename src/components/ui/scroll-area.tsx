@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils"
  * Mirrors the shadcn ScrollArea API surface so the Threads tree code works unchanged.
  * ref is intentionally not forwarded (not needed for our implementation).
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function ScrollArea({
   className,
   children,
@@ -25,4 +24,4 @@ function ScrollArea({
   )
 }
 
-export { ScrollArea, ScrollBar }
+export { ScrollArea }

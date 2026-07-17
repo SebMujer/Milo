@@ -366,16 +366,28 @@ function NodeIcon({ kind }: { kind?: TreeViewElement["kind"] }) {
 /*  Recursive tree renderer                                                    */
 /* ═══════════════════════════════════════════════════════════════════════════ */
 
-function RenderTree({ elements }: { elements: TreeViewElement[] }) {
+function RenderTree({
+	elements,
+	onSelect,
+}: {
+	elements: TreeViewElement[]
+	onSelect?: (id: string) => void
+}) {
 	return (
 		<>
 			{elements.map((el) =>
 				el.children ? (
 					<Folder key={el.id} element={el.name} value={el.id}>
-						<RenderTree elements={el.children} />
+						<RenderTree elements={el.children} onSelect={onSelect} />
 					</Folder>
 				) : (
-					<File key={el.id} value={el.id} color={el.color} fileIcon={<NodeIcon kind={el.kind} />}>
+					<File
+						key={el.id}
+						value={el.id}
+						color={el.color}
+						fileIcon={<NodeIcon kind={el.kind} />}
+						onClick={() => onSelect?.(el.id)}
+					>
 						<span className="text-sm text-foreground/80">{el.name}</span>
 						{el.kind && el.kind !== "folder" && (
 							<Badge

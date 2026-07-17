@@ -260,13 +260,13 @@ interface CreationPopoverProps {
 function CreationPopover({ position, onConfirm, onClose }: CreationPopoverProps) {
 	const [label, setLabel] = useState("");
 	const [type, setType] = useState<NodeType>("note");
-	const [color, setColor] = useState(COLORS[0].hex);
+	const [color, setColor] = useState<string>(COLORS[0].hex);
 	const ref = useRef<HTMLDivElement>(null);
 
 	/* Click-outside dismiss */
 	useEffect(() => {
 		function handler(e: MouseEvent) {
-			if (ref.current && !ref.current.contains(e.target as Node)) {
+			if (ref.current && !ref.current.contains(e.target as unknown as globalThis.Node)) {
 				onClose();
 			}
 		}
@@ -384,7 +384,7 @@ function NodeContextPopover({
 
 	useEffect(() => {
 		function handler(e: MouseEvent) {
-			if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+			if (ref.current && !ref.current.contains(e.target as unknown as globalThis.Node)) onClose();
 		}
 		document.addEventListener("mousedown", handler, true);
 		return () => document.removeEventListener("mousedown", handler, true);
